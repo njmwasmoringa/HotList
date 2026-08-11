@@ -12,6 +12,8 @@ const categoriesListEl = document.querySelector("#categories");
 const taskTmpl = document.querySelector("#taskTempl").content;
 const tasksList = document.querySelector("#tasks");
 
+document.querySelectorAll(".menuIcon").forEach(b=>b.addEventListener("click", toggleAside));
+
 let selectedCategory;
 
 function toggleDialog(dialog) {
@@ -23,12 +25,19 @@ function toggleDialog(dialog) {
     }
 }
 
+function toggleAside(){
+    const aside = document.querySelector("aside");
+    aside.style.display = aside.style.display === "none" ? "" : "none";
+}
+
 function categoryItem(category) {
     const li = document.createElement("li");
     li.classList.add("category");
     li.id = category.id;
     li.innerText = category.name;
     li.addEventListener("click", () => {
+        categoriesListEl.querySelectorAll('li').forEach(l=>l.classList.remove("active"))
+        li.classList.add("active")
         readOne(`/categories/${category.id}?_embed=tasks`, category.id).then(selectCategory);
     });
     return li;
@@ -142,4 +151,8 @@ taskForm.addEventListener("submit", evt => {
         selectedCategory.tasks.push(newTask);
         selectCategory(selectedCategory);
     })
-})
+});
+
+if(window.innerWidth <= 570){
+    document.querySelector("aside").style.display = "none";
+}
